@@ -3,7 +3,8 @@
   "package": "com.wither.useful_commands.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "TestMixin"
+    "TestMixin",
+    "structure.StructureManagerAccessorMixin"
   ],
   "client": [
   ],

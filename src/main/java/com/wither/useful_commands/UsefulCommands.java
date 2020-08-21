@@ -10,6 +10,7 @@ import com.wither.useful_commands.server.command.ScoreboardRandomCommand;
 import com.wither.useful_commands.server.command.StructureCommand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.CommandManager;
 
 public class UsefulCommands implements ModInitializer {
