@@ -7,6 +7,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wither.useful_commands.server.command.MotionCommand;
 import com.wither.useful_commands.server.command.RideCommand;
 import com.wither.useful_commands.server.command.ScoreboardRandomCommand;
+import com.wither.useful_commands.server.command.StructureCommand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
@@ -19,6 +20,7 @@ public class UsefulCommands implements ModInitializer {
             MotionCommand.register(commandDispatcher);
             RideCommand.register(commandDispatcher);
             ScoreboardRandomCommand.register(commandDispatcher);
+            StructureCommand.register(commandDispatcher);
         }));
     }
 }
