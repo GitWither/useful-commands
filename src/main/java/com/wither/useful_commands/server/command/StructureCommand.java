@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.wither.useful_commands.command.argument.BlockRotationArgumentType;
 import com.wither.useful_commands.mixin.structure.StructureManagerAccessorMixin;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.argument.Vec3ArgumentType;
@@ -37,15 +38,18 @@ public class StructureCommand {
                 .then(literal("load")
                         .then(argument("name", IdentifierArgumentType.identifier())
                                 .suggests(SUGGESTION_PROVIDER)
+                                .executes(ctx -> executeLoadStructure(ctx, IdentifierArgumentType.getIdentifier(ctx, "name"), ctx.getSource().getPosition(), BlockRotation.NONE, BlockMirror.NONE, true))
                                 .then(argument("to", Vec3ArgumentType.vec3(false))
-                                        .executes(ctx -> executeLoadStructure(ctx, IdentifierArgumentType.getIdentifier(ctx, "name"), Vec3ArgumentType.getVec3(ctx, "to")))
+                                        .executes(ctx -> executeLoadStructure(ctx, IdentifierArgumentType.getIdentifier(ctx, "name"), Vec3ArgumentType.getVec3(ctx, "to"), BlockRotation.NONE, BlockMirror.NONE, true))
+                                        .then(argument("rotation", BlockRotationArgumentType.blockRotation())
+                                                .executes(ctx -> executeLoadStructure(ctx, IdentifierArgumentType.getIdentifier(ctx, "name"), ctx.getSource().getPosition(), BlockRotationArgumentType.getBlockRotation("rotation", ctx), BlockMirror.NONE, true)))
                                 )
                         )
                 )
         );
     }
 
-    public static int executeLoadStructure(CommandContext<ServerCommandSource> context, Identifier name, Vec3d to) throws CommandSyntaxException {
+    public static int executeLoadStructure(CommandContext<ServerCommandSource> context, Identifier name, Vec3d to, BlockRotation rotation, BlockMirror mirror, boolean includeEntities) throws CommandSyntaxException {
         StructureManager structureManager = context.getSource().getMinecraftServer().getStructureManager();
         BlockPos position = new BlockPos(to);
 
@@ -56,7 +60,7 @@ public class StructureCommand {
             return 0;
         }
 
-        StructurePlacementData structurePlacementData = new StructurePlacementData().setMirror(BlockMirror.NONE).setRotation(BlockRotation.NONE).setChunkPosition(null);
+        StructurePlacementData structurePlacementData = new StructurePlacementData().setMirror(BlockMirror.NONE).setRotation(rotation).setChunkPosition(null);
         newStructure.place(context.getSource().getWorld(), position, structurePlacementData, createRandom(0));
         return Command.SINGLE_SUCCESS;
     }
