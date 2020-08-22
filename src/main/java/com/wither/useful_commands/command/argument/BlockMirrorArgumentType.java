@@ -24,7 +24,7 @@ public class BlockMirrorArgumentType implements ArgumentType<BlockMirror> {
         return new BlockMirrorArgumentType();
     }
 
-    public static <S> BlockMirror getBlockMirror(String name, CommandContext<S> context) {
+    public static <S> BlockMirror getBlockMirror(CommandContext<S> context, String name) {
         return context.getArgument(name, BlockMirror.class);
     }
 

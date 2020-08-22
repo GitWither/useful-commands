@@ -1,6 +1,5 @@
 package com.wither.useful_commands.command.argument;
 
-import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -8,30 +7,27 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.wither.useful_commands.server.world.StructureSaveMode;
 import net.minecraft.server.command.CommandSource;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class BlockRotationArgumentType implements ArgumentType<BlockRotation> {
+public class StructureSaveModeArgument implements ArgumentType<StructureSaveMode> {
+    private static final Collection<String> EXAMPLES = Arrays.asList("disk", "memory");
 
-    private static final Collection<String> EXAMPLES = Arrays.asList("0_degrees", "90_degrees", "180_degrees", "270_degrees");
-
-    public static BlockRotationArgumentType blockRotation() {
-        return new BlockRotationArgumentType();
+    public static StructureSaveModeArgument structureSaveMode() {
+        return new StructureSaveModeArgument();
     }
 
-    public static <S> BlockRotation getBlockRotation(CommandContext<S> context, String name) {
-        return context.getArgument(name, BlockRotation.class);
+    public static <S> StructureSaveMode getStructureSaveMode(CommandContext<S> context, String name) {
+        return context.getArgument(name, StructureSaveMode.class);
     }
 
     @Override
-    public BlockRotation parse(StringReader reader) throws CommandSyntaxException {
+    public StructureSaveMode parse(StringReader reader) throws CommandSyntaxException {
         int argumentBeginning = reader.getCursor();
         if (!reader.canRead()) {
             reader.skip();
@@ -43,19 +39,15 @@ public class BlockRotationArgumentType implements ArgumentType<BlockRotation> {
         switch (rotation) {
             default:
                 throw new SimpleCommandExceptionType(new LiteralText("Invalid rotation")).createWithContext(reader);
-            case "0_degrees":
-                return BlockRotation.NONE;
-            case "90_degrees":
-                return BlockRotation.CLOCKWISE_90;
-            case "180_degrees":
-                return BlockRotation.CLOCKWISE_180;
-            case "270_degrees":
-                return BlockRotation.COUNTERCLOCKWISE_90;
+            case "disk":
+                return StructureSaveMode.DISK;
+            case "memory":
+                return StructureSaveMode.MEMORY;
         }
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         return CommandSource.suggestMatching(EXAMPLES, builder);
     }
 
